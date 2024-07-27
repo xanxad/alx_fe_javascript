@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const newQuoteBtn = document.getElementById("newQuote");
   const formContainer = document.getElementById("formContainer"); // Container for the form
   const importFileInput = document.getElementById("importFile");
+  const exportQuotesBtn = document.getElementById("exportQuotes");
 
   // Function to save quotes to local storage
   function saveQuotes() {
@@ -123,10 +124,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event listener for import file input
   importFileInput.addEventListener("change", importFromJsonFile);
-
-  // Create export button
-  const exportBtn = document.createElement("button");
-  exportBtn.textContent = "Export Quotes";
-  exportBtn.addEventListener("click", exportToJsonFile);
-  document.body.appendChild(exportBtn);
 });
