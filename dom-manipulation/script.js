@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomQuote = quotes[randomIndex];
 
     // Update the quote display using textContent
-    quoteDisplay.textContent = `"${randomQuote.text}" - ${randomQuote.category}`;
+    quoteDisplay.innerHTML = `"${randomQuote.text}" - ${randomQuote.category}`;
   }
 
   // Function to create and display the form for adding new quotes
