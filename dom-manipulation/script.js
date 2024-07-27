@@ -25,35 +25,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
 
-    // Update the quote display with innerHTML
-    quoteDisplay.innerHTML = `"${randomQuote.text}" - ${randomQuote.category}`;
+    // Update the quote display using textContent
+    quoteDisplay.textContent = `"${randomQuote.text}" - ${randomQuote.category}`;
   }
 
   // Function to create and display the form for adding new quotes
   function createAddQuoteForm() {
-    formContainer.innerHTML = `
-          <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-          <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-          <button id="addQuoteBtn">Add Quote</button>
-      `;
+    // Create input for new quote text
+    const newQuoteTextInput = document.createElement("input");
+    newQuoteTextInput.id = "newQuoteText";
+    newQuoteTextInput.type = "text";
+    newQuoteTextInput.placeholder = "Enter a new quote";
 
-    // Select the new form elements
-    const addQuoteBtn = document.getElementById("addQuoteBtn");
-    const newQuoteText = document.getElementById("newQuoteText");
-    const newQuoteCategory = document.getElementById("newQuoteCategory");
+    // Create input for new quote category
+    const newQuoteCategoryInput = document.createElement("input");
+    newQuoteCategoryInput.id = "newQuoteCategory";
+    newQuoteCategoryInput.type = "text";
+    newQuoteCategoryInput.placeholder = "Enter quote category";
+
+    // Create button for adding new quote
+    const addQuoteBtn = document.createElement("button");
+    addQuoteBtn.id = "addQuoteBtn";
+    addQuoteBtn.textContent = "Add Quote";
+
+    // Append the created elements to formContainer
+    formContainer.appendChild(newQuoteTextInput);
+    formContainer.appendChild(newQuoteCategoryInput);
+    formContainer.appendChild(addQuoteBtn);
 
     // Function to add a new quote
     function addQuote() {
-      const quoteText = newQuoteText.value.trim();
-      const quoteCategory = newQuoteCategory.value.trim();
+      const quoteText = newQuoteTextInput.value.trim();
+      const quoteCategory = newQuoteCategoryInput.value.trim();
 
       if (quoteText && quoteCategory) {
         const newQuote = { text: quoteText, category: quoteCategory };
         quotes.push(newQuote);
 
         // Clear the input fields
-        newQuoteText.value = "";
-        newQuoteCategory.value = "";
+        newQuoteTextInput.value = "";
+        newQuoteCategoryInput.value = "";
 
         alert("New quote added successfully!");
       } else {
