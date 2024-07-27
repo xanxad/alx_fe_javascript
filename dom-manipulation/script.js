@@ -1,19 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Initial array of quote objects
-  const quotes = [
-    {
-      text: "The only limit to our realization of tomorrow is our doubts of today.",
-      category: "Motivation",
-    },
-    {
-      text: "Life is 10% what happens to us and 90% how we react to it.",
-      category: "Life",
-    },
-    {
-      text: "Do not watch the clock. Do what it does. Keep going.",
-      category: "Time",
-    },
-  ];
+  // Retrieve quotes from local storage or use default quotes
+  const storedQuotes = localStorage.getItem("quotes");
+
+  const quotes = storedQuotes
+    ? JSON.parse(storedQuotes)
+    : [
+        {
+          text: "The only limit to our realization of tomorrow is our doubts of today.",
+          category: "Motivation",
+        },
+        {
+          text: "Life is 10% what happens to us and 90% how we react to it.",
+          category: "Life",
+        },
+        {
+          text: "Do not watch the clock. Do what it does. Keep going.",
+          category: "Time",
+        },
+      ];
 
   // Select the DOM elements by their IDs
   const quoteDisplay = document.getElementById("quoteDisplay");
