@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     quotes = [...uniqueServerQuotes, ...quotes];
     localStorage.setItem("quotes", JSON.stringify(quotes));
     populateCategories();
-    alert("Quotes synced with server successfully!");
+    alert("Quotes synced with server!");
   }
 
   // Initial setup
