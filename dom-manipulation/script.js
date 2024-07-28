@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
 
+  let selectedCategory = localStorage.getItem("selectedCategory") || "all";
+
   const quoteDisplay = document.getElementById("quoteDisplay");
   const newQuoteBtn = document.getElementById("newQuote");
   const formContainer = document.getElementById("formContainer");
@@ -27,8 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showRandomQuote() {
     const filteredQuotes = quotes.filter(
       (quote) =>
-        categoryFilter.value === "all" ||
-        quote.category === categoryFilter.value
+        selectedCategory === "all" || quote.category === selectedCategory
     );
     const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
     const randomQuote = filteredQuotes[randomIndex];
@@ -97,10 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
       option.textContent = category;
       categoryFilter.appendChild(option);
     });
+
+    categoryFilter.value = selectedCategory;
   }
 
   // Function to filter quotes based on selected category
   function filterQuotes() {
+    selectedCategory = categoryFilter.value;
+    localStorage.setItem("selectedCategory", selectedCategory);
     showRandomQuote();
   }
 
@@ -173,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
   newQuoteBtn.addEventListener("click", showRandomQuote);
   exportQuotesBtn.addEventListener("click", exportToJsonFile);
   importFileInput.addEventListener("change", importFromJsonFile);
+  categoryFilter.addEventListener("change", filterQuotes);
 
   createAddQuoteForm();
   populateCategories();
