@@ -114,23 +114,37 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.readAsText(file);
   }
 
-  // Function to fetch quotes from the server and update local storage
-  async function syncWithServer() {
+  // Function to fetch quotes from the server
+  async function fetchQuotesFromServer() {
     try {
       const response = await fetch(apiUrl);
       const serverQuotes = await response.json();
 
-      // Example conflict resolution: server's data takes precedence
-      const uniqueServerQuotes = serverQuotes.filter(
-        (serverQuote) =>
-          !quotes.some((localQuote) => localQuote.text === serverQuote.text)
-      );
-      quotes = [...uniqueServerQuotes, ...quotes];
-      localStorage.setItem("quotes", JSON.stringify(quotes));
-      populateCategories();
+      // Convert server quotes to match the local quote structure
+      const formattedQuotes = serverQuotes.map((sq) => ({
+        text: sq.body,
+        category: sq.title,
+      }));
+
+      return formattedQuotes;
     } catch (error) {
-      console.error("Failed to sync with server:", error);
+      console.error("Failed to fetch quotes from server:", error);
+      return [];
     }
+  }
+
+  // Function to sync quotes with the server and update local storage
+  async function syncWithServer() {
+    const serverQuotes = await fetchQuotesFromServer();
+
+    // Example conflict resolution: server's data takes precedence
+    const uniqueServerQuotes = serverQuotes.filter(
+      (serverQuote) =>
+        !quotes.some((localQuote) => localQuote.text === serverQuote.text)
+    );
+    quotes = [...uniqueServerQuotes, ...quotes];
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+    populateCategories();
   }
 
   // Initial setup
