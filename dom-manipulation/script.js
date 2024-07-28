@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Retrieve quotes from local storage or use default quotes
+  // Retrieve quotes and selected category from local storage or use defaults
   const storedQuotes = localStorage.getItem("quotes");
-
   const quotes = storedQuotes
     ? JSON.parse(storedQuotes)
     : [
@@ -19,24 +18,37 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       ];
 
+  const storedCategory = localStorage.getItem("selectedCategory");
+  const selectedCategory = storedCategory || "all";
+
   // Select the DOM elements by their IDs
   const quoteDisplay = document.getElementById("quoteDisplay");
   const newQuoteBtn = document.getElementById("newQuote");
-  const formContainer = document.getElementById("formContainer"); // Container for the form
+  const formContainer = document.getElementById("formContainer");
   const importFileInput = document.getElementById("importFile");
   const exportQuotesBtn = document.getElementById("exportQuotes");
+  const categoryFilter = document.getElementById("categoryFilter");
 
   // Function to save quotes to local storage
   function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
   }
 
+  // Function to save the selected category to local storage
+  function saveSelectedCategory(category) {
+    localStorage.setItem("selectedCategory", category);
+  }
+
   // Function to display a random quote
   function showRandomQuote() {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    const randomQuote = quotes[randomIndex];
+    const filteredQuotes = quotes.filter(
+      (quote) =>
+        selectedCategory === "all" || quote.category === selectedCategory
+    );
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    const randomQuote = filteredQuotes[randomIndex];
 
-    // Update the quote display using textContent
+    // Update the quote display using innerHTML
     quoteDisplay.innerHTML = `"${randomQuote.text}" - ${randomQuote.category}`;
   }
 
@@ -73,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const newQuote = { text: quoteText, category: quoteCategory };
         quotes.push(newQuote);
         saveQuotes();
+        updateCategoryFilter(); // Update the filter options with the new category
 
         // Clear the input fields
         newQuoteTextInput.value = "";
@@ -86,6 +99,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Event listener for adding a new quote
     addQuoteBtn.addEventListener("click", addQuote);
+  }
+
+  // Function to update the category filter options
+  function updateCategoryFilter() {
+    const categories = [
+      "all",
+      ...new Set(quotes.map((quote) => quote.category)),
+    ];
+    categoryFilter.innerHTML = categories
+      .map((category) => `<option value="${category}">${category}</option>`)
+      .join("");
+    categoryFilter.value = selectedCategory;
+  }
+
+  // Function to filter quotes based on the selected category
+  function filterQuotes() {
+    const selectedCategory = categoryFilter.value;
+    saveSelectedCategory(selectedCategory);
+    showRandomQuote();
   }
 
   // Function to export quotes to a JSON file
@@ -108,13 +140,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const importedQuotes = JSON.parse(event.target.result);
       quotes.push(...importedQuotes);
       saveQuotes();
+      updateCategoryFilter();
       alert("Quotes imported successfully!");
+      showRandomQuote(); // Optionally refresh the display
     };
     fileReader.readAsText(event.target.files[0]);
   }
 
   // Event listener for showing a random quote
   newQuoteBtn.addEventListener("click", showRandomQuote);
+
+  // Event listener for export quotes button
+  exportQuotesBtn.addEventListener("click", exportToJsonFile);
 
   // Create and display the add quote form on page load
   createAddQuoteForm();
@@ -124,4 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event listener for import file input
   importFileInput.addEventListener("change", importFromJsonFile);
+
+  // Populate the category filter and set the selected value
+  updateCategoryFilter();
+  categoryFilter.value = selectedCategory;
+
+  // Filter quotes on category change
+  categoryFilter.addEventListener("change", filterQuotes);
 });
