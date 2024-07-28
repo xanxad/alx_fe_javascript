@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const newQuote = { text: quoteText, category: quoteCategory };
         quotes.push(newQuote);
         saveQuotes();
-        updateCategoryFilter(); // Update the filter options with the new category
+        populateCategories(); // Update the filter options with the new category
 
         // Clear the input fields
         newQuoteTextInput.value = "";
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Function to update the category filter options
-  function updateCategoryFilter() {
+  function populateCategories() {
     const categories = [
       "all",
       ...new Set(quotes.map((quote) => quote.category)),
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const importedQuotes = JSON.parse(event.target.result);
       quotes.push(...importedQuotes);
       saveQuotes();
-      updateCategoryFilter();
+      populateCategories();
       alert("Quotes imported successfully!");
       showRandomQuote(); // Optionally refresh the display
     };
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
   importFileInput.addEventListener("change", importFromJsonFile);
 
   // Populate the category filter and set the selected value
-  updateCategoryFilter();
+  populateCategories();
   categoryFilter.value = selectedCategory;
 
   // Filter quotes on category change
